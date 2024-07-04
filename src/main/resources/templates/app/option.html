@@ -2,11 +2,51 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>設定・参照</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-工事中<br>
-ここで過去のデータ参照や、月ごとの平均値、目標値の設定などが行えるようになる予定
-<a th:href="@{/backIndex}" text="トップへ戻る"></a>
+<form th:action="@{/option}" method="post">
+	<div th:if="${optionError} eq '1'">今月以前の年月を選択してください。</div>
+	<select th:name="year">
+		<option th:each="year : ${year}" th:text="${year}"></option>
+	</select>年
+	<select th:name="month">
+			<option th:each="month : ${month}" th:text="${month}"></option>
+	</select>月
+	<input type="submit" value="表示">
+</form>
+<table class="table table-striped">
+	<thread>
+		<tr>
+			<th>年月日</th>
+			<th>朝食</th>
+			<th>注射(朝)</th>
+			<th>血糖値(朝)</th>
+			<th>昼食</th>
+			<th>注射(昼)</th>
+			<th>血糖値(昼)</th>
+			<th>夕食</th>
+			<th>注射(夕)</th>
+			<th>血糖値(夕)</th>
+		</tr>
+	</thread>
+	<tbody>
+		<tr th:each="num : ${NumericForm}">
+			<td th:text="${num.year} + '年' + ${num.month} + '月' + ${num.date} + '日'" ></td>
+			<td th:text="${num.breakfast}"></td>
+			<td th:text="${num.morning_insulin}"></td>
+			<td th:text="${num.morning_numeric}"></td>
+			<td th:text="${num.lunch}"></td>
+			<td th:text="${num.noon_insulin}"></td>
+			<td th:text="${num.noon_numeric}"></td>
+			<td th:text="${num.dinner}"></td>
+			<td th:text="${num.evening_insulin}"></td>
+			<td th:text="${num.evening_numeric}"></td>
+		</tr>
+	</tbody>
+</table>
+<a th:href="@{/backIndex}" th:text="トップへ戻る"></a>
 </body>
 </html>

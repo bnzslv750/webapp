@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import app.app.entity.NumericEntity;
@@ -14,7 +15,7 @@ import app.app.form.NumericForm;
 import app.app.repository.NumericRepository;
 
 @Service
-public class IndexLogicImpl implements IndexLogic {
+public class OptionLogicImpl implements OptionLogic {
 	
 	@Autowired
 	NumericRepository numericRepository;
@@ -22,24 +23,39 @@ public class IndexLogicImpl implements IndexLogic {
 	@Autowired
 	ModelMapper mapper;
 	
-	// ユーザーネームを引数としてもらい、フォームをリスト化し、返り値にするメソッドを作る
-	public List<NumericForm> thisMonth(String username){
-		
-		// 今月のデータを取得するための引数として今年、今月、今月の日数を用意
+	@Override
+	public List<Integer> yearPulldown() {
+		// プルダウン用のリストを作成
+		List<Integer> list = new ArrayList<Integer>();
+		// 今年を取得
 		int year = LocalDate.now().getYear();
-		int month = LocalDate.now().getMonth().getValue();
-		int numberOfDate = getThisMonthDate();
+		for(int i = 2024;i <= year;i++) {
+			// 2024年から今年までのリストを作成
+			list.add(i);
+		}
+		// 年のリストを返却
+		return list;
+	}
+	
+	@Override
+	// ユーザーネームを引数としてもらい、フォームをリスト化し、返り値にするメソッドを作る
+	public List<NumericForm> getMonth(int year, int month){
+		
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		// 対象月のデータを取得するための引数として対象月の日数を用意
+		int numberOfDate = getMonthDate(year, month);
 		
 		// numeric_tから取得、登録するためのEntity
 		List<NumericEntity> entityList = new ArrayList<>();
 		
-		// 今月のデータを取得し、entityに代入
+		// 対象月のデータを取得し、entityに代入
 		entityList = numericRepository.findNumericByUsername(username, year, month);
 		
 		// ビューに返却するためのFormを宣言
 		List<NumericForm> formList = new ArrayList<>();
 		
-		// 今月のデータがまだ存在しない場合は、登録する
+		// 対象月のデータがまだ存在しない場合は、登録する
 		if(entityList.size() < 26) {
 			NumericEntity ne = new NumericEntity();
 			ne.setUsername(username);
@@ -53,28 +69,29 @@ public class IndexLogicImpl implements IndexLogic {
 				formList.add(mapper.map(ne, NumericForm.class));
 			}
 		} else {
-			
+				
 			for(int i = 0; i < entityList.size();i++) {
 				formList.add(mapper.map(entityList.get(i), NumericForm.class));
 			}
 		}
-
+		
+		// 取得したデータをマッピングする
+	//	for(int i = 0; i < entityList.size();i++) {
+		//	formList.add(mapper.map(entityList.get(i), NumericForm.class));
+		//}
+		
+		// formを返却
 		return formList;
 	}
-
-	// 今月の日数を取得するメソッド
-	public int getThisMonthDate() {
-		//現在を取得
-		LocalDate localDate = LocalDate.now();
-		//今年を取得
-		int year = localDate.getYear();
-		//今月を取得
-		int month = localDate.getMonth().getValue();
+	
+	@Override
+	// 対象月の日数を取得するメソッド
+	public int getMonthDate(int year, int month) {
 		
         Calendar cal = Calendar.getInstance();
         cal.clear();
         
-        //先程取得した今年、今月をカレンダーにセット
+        //対象の年月をカレンダーにセット
         cal.set(Calendar.YEAR,year);
         cal.set(Calendar.MONTH,month - 1);
         
@@ -83,4 +100,5 @@ public class IndexLogicImpl implements IndexLogic {
         // 月末の日数を返却
         return date;
 	}
+
 }

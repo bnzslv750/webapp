@@ -23,8 +23,8 @@ public class IndexLogicImplTest {
 	@BeforeEach
 	public void JU() {
 		numericForm = new NumericForm();
-		//indexLogicImpl = new IndexLogicImpl();
 	}
+	
 	@Test
 	public void test1() {
 		List<NumericForm> numericFormList = new ArrayList<>();
@@ -34,4 +34,5 @@ public class IndexLogicImplTest {
 		assertThat(date1_1, is(1));
 		assertThat(date1_2, is(30));
 	}
+	
 }

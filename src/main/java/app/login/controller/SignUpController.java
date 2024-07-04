@@ -78,7 +78,7 @@ public class SignUpController {
 			e.printStackTrace();
 		}
 		// /のGetMappingへ遷移
-		return "fredirect:/";
+		return "redirect:/";
 	}
 	
 }

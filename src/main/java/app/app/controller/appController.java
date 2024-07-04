@@ -1,19 +1,33 @@
 package app.app.controller;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import app.app.form.NumericForm;
 import app.app.repository.NumericRepository;
+import app.app.service.IndexLogicImpl;
+import app.app.service.OptionLogicImpl;
 
 @Controller
 public class appController {
 	
 	@Autowired
 	NumericRepository numericRepository;
+	
+	@Autowired
+	IndexLogicImpl indexLogicImpl;
+	
+	@Autowired
+	OptionLogicImpl optionLogicImpl;
 	
 	// 朝食分更新処理
 	@PostMapping("/morning_set")
@@ -76,7 +90,68 @@ public class appController {
 	
 	// オプション画面へ
 	@GetMapping("/option")
-	public String goOption() {
+	public String goOption(Model model) {
+		// プルダウン用の年リストを作成
+		List<Integer> year = new ArrayList<Integer>();
+		// 2024年から今年までのリストを作る
+		year = optionLogicImpl.yearPulldown();
+		// ビューに渡す
+		model.addAttribute("year",year);
+		// プルダウン用の月リストを作成
+		List<Integer> month = new ArrayList<Integer>();
+		// 1月から12月まで作成
+		for(int i = 1;i <= 12;i++) {
+			month.add(i);
+		}
+		// ビューに渡す
+		model.addAttribute("month",month);
+		// ビューのテーブル用リストを作成
+		List<NumericForm> numericForm = new ArrayList<NumericForm>();
+		// リストの取得引数としてログインユーザーを取得
+		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		// 今月のデータを取得する処理
+		numericForm = indexLogicImpl.thisMonth(name);
+		// 今月のデータをビューに渡す
+		model.addAttribute("NumericForm",numericForm);
+		// option.htmlへ遷移
+		return "app/option";
+	}
+	
+	@PostMapping("/option")
+	public String showNum(@RequestParam(value="year") String year,@RequestParam(value="month") String month,Model model) {
+		// プルダウン用の年リストを作成
+		List<Integer> pullYear = new ArrayList<Integer>();
+		// 2024年から今年までのリストを作る
+		pullYear = optionLogicImpl.yearPulldown();
+		// ビューに渡す
+		model.addAttribute("year",pullYear);
+		// プルダウン用の月リストを作成
+		List<Integer> pullMonth = new ArrayList<Integer>();
+		// 1月から12月まで作成
+		for(int i = 1;i <= 12;i++) {
+			pullMonth.add(i);
+		}
+		model.addAttribute("month",pullMonth);		
+		// 選択した年月を数値に変換
+		int selectYear = Integer.parseInt(year);
+		int selectMonth = Integer.parseInt(month);
+		
+		// 今年、今月を取得 
+		int thisYear = LocalDate.now().getYear();
+		int thisMonth = LocalDate.now().getMonth().getValue();
+		
+		// ビューに渡す用のリスト
+		List<NumericForm> list = new ArrayList<NumericForm>();
+		
+		// 未来を見ようとしていたら、エラーメッセージを出力し今年のデータを表示
+		if(selectYear == thisYear && selectMonth > thisMonth) {
+			model.addAttribute("optionError","1");
+			list = optionLogicImpl.getMonth(thisYear, thisMonth);
+		} else {
+			list = optionLogicImpl.getMonth(selectYear, selectMonth);
+		}
+		// ビューに渡す用の
+		model.addAttribute("NumericForm",list);
 		return "app/option";
 	}
 	
