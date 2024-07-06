@@ -150,9 +150,16 @@ public class appController {
 		} else {
 			list = optionLogicImpl.getMonth(selectYear, selectMonth);
 		}
-		// ビューに渡す用の
+		// ビューに渡す用のモデルに追加
 		model.addAttribute("NumericForm",list);
+		// option画面を表示
 		return "app/option";
+	}
+	
+	@PostMapping("/target")
+	public String target(@RequestParam(value="target") String target) {
+
+		return "redirect:/option";
 	}
 	
 	// オプション画面からトップへ
