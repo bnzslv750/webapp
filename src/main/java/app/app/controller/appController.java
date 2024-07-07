@@ -16,6 +16,7 @@ import app.app.form.NumericForm;
 import app.app.repository.NumericRepository;
 import app.app.service.IndexLogicImpl;
 import app.app.service.OptionLogicImpl;
+import app.app.service.TargetLogicImpl;
 
 @Controller
 public class appController {
@@ -28,6 +29,9 @@ public class appController {
 	
 	@Autowired
 	OptionLogicImpl optionLogicImpl;
+	
+	@Autowired
+	TargetLogicImpl targetLogicImpl;
 	
 	// 朝食分更新処理
 	@PostMapping("/morning_set")
@@ -113,6 +117,10 @@ public class appController {
 		numericForm = indexLogicImpl.thisMonth(name);
 		// 今月のデータをビューに渡す
 		model.addAttribute("NumericForm",numericForm);
+		// 目標値を取得
+		int target = targetLogicImpl.selectTarget();
+		// 目標値をビューに渡す
+		model.addAttribute("target",target);
 		// option.htmlへ遷移
 		return "app/option";
 	}
@@ -152,13 +160,20 @@ public class appController {
 		}
 		// ビューに渡す用のモデルに追加
 		model.addAttribute("NumericForm",list);
+		// 目標値を取得するためのユーザー名を取得
+		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		// 目標値を取得
+		int target = targetLogicImpl.selectTarget();
+		// 目標値をビューに渡す
+		model.addAttribute("target",target);
 		// option画面を表示
 		return "app/option";
 	}
 	
 	@PostMapping("/target")
 	public String target(@RequestParam(value="target") String target) {
-
+		int targetNum = Integer.parseInt(target);
+		targetLogicImpl.setTarget(targetNum);
 		return "redirect:/option";
 	}
 	

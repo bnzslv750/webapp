@@ -9,12 +9,10 @@
     function intCheck(){
 		var targetValue = document.getElementById('target').value;
 		alert(targetValue);
-        if (targetValue	.match(/d{3}/)){
+        if (targetValue	.match(/[0-9]{3}/)){
 			// 数字3桁だった場合、処理を実行
-			alert("true");
 			return true;
         }else{
-			alert("false");
 			// 目標値が数値ではない、またはnullの場合(エラーの場合)
 			let targetError = document.getElementById('targetError');
 			// エラーメッセージを設定
@@ -38,7 +36,7 @@
 </form>
 <form class="selectMonth" th:action="@{/target}" method="post">
 	<div class="textRed" id="targetError" value=""></div>
-	目標値：<input type="text" id="target" name="target">
+	目標値：<input type="text" th:value="${target}" id="target" name="target">
 	<input type="submit" value="設定" onclick="return intCheck();">
 </form>
 <table class="table table-striped">

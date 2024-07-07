@@ -75,11 +75,6 @@ public class OptionLogicImpl implements OptionLogic {
 			}
 		}
 		
-		// 取得したデータをマッピングする
-	//	for(int i = 0; i < entityList.size();i++) {
-		//	formList.add(mapper.map(entityList.get(i), NumericForm.class));
-		//}
-		
 		// formを返却
 		return formList;
 	}

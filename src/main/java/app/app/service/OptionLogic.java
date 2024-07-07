@@ -10,4 +10,5 @@ public interface OptionLogic {
 	public List<NumericForm> getMonth(int year, int month);
 	
 	public int getMonthDate(int year, int month);
+
 }
