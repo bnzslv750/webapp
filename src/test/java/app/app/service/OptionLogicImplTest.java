@@ -24,4 +24,10 @@ public class OptionLogicImplTest {
 		assertThat(year, is(2024));
 	}
 	
+	@Test
+	public void test2() {
+		int date = optionLogicImpl.getMonthDate(2024,1);
+		assertThat(date,is(31));
+	}
+	
 }

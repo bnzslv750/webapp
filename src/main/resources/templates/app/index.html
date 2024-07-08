@@ -5,8 +5,11 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 <link rel="stylesheet" href="css/main.css">
 <title>血糖値管理</title>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script src="js/index.js"></script>
 </head>
 <body>
+	<input type="hidden" id="target" th:value="${target}">
 	<heading class="header">
 		<h2>
 			<a class="headerClass" th:href="@{/}" th:text="'ようこそ、' + ${username} + 'さん'"></a>
@@ -38,9 +41,9 @@
 		        th:aria-labelledby="'heading' + ${form.date}" data-bs-parent="#formAccordion">
 		     	<div class="accordion-body">
 				<!-- 中身 -->
-				<form th:action="@{/morning_set}" class="collapseDiv" method="post">
+				<form th:id="'morningForm' + ${form.date}" th:action="@{/morning_set}" class="collapseDiv" method="post">
 					朝の血糖値&emsp;
-					<input class="numForm" type="text" th:name="morning_numeric" th:value="${form.morning_numeric}" maxlength="3" pattern="[0-9]+" required>
+					<input class="numForm" th:id="morning_numeric + ${form.date}" type="text" th:name="morning_numeric" th:value="${form.morning_numeric}" maxlength="3" pattern="[0-9]+" required>
 					朝食メニュー
 					<input class="foodForm" type="text" th:name="breakfast" th:value="${form.breakfast}" maxlength="30" required>
 					インスリンの数
@@ -54,9 +57,9 @@
 					<input type="hidden" th:name="month" th:value="${form.month}">
 					<input type="hidden" th:name="date" th:value="${form.date}">
 				</form>
-				<form th:action="@{/noon_set}" class="collapseDiv" method="post">
+				<form th:id="'noonForm' + ${form.date}" th:action="@{/noon_set}" class="collapseDiv" method="post">
 					昼の血糖値&emsp;
-					<input class="numForm" type="text" th:name="noon_numeric" th:value="${form.noon_numeric}" maxlength="3" pattern="[0-9]+" required>
+					<input class="numForm" th:id="noon_numeric + ${form.date}" type="text" th:name="noon_numeric" th:value="${form.noon_numeric}" maxlength="3" pattern="[0-9]+" required>
 					昼食メニュー
 					<input class="foodForm" type="text" th:name="lunch" th:value="${form.lunch}" maxlength="30" required>
 					インスリンの数
@@ -70,9 +73,9 @@
 					<input type="hidden" th:name="month" th:value="${form.month}">
 					<input type="hidden" th:name="date" th:value="${form.date}">
 				</form>
-				<form th:action="@{/evening_set}" class="collapseDiv" method="post">
+				<form th:id="'eveningForm' + ${form.date}" th:action="@{/evening_set}" class="collapseDiv" method="post">
 					夕方の血糖値
-					<input class="numForm" type="text" th:name="evening_numeric" th:value="${form.evening_numeric}" maxlength="3" pattern="[0-9]+" required>
+					<input class="numForm" th:id="evening_numeric + ${form.date}" type="text" th:name="evening_numeric" th:value="${form.evening_numeric}" maxlength="3" pattern="[0-9]+" required>
 					夕食メニュー
 					<input class="foodForm" type="text" th:name="dinner" th:value="${form.dinner}" maxlength="30" required>
 					インスリンの数
@@ -91,8 +94,5 @@
 		  </div>
 		</div>
 	</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-<script>
-</script>
 </body>
 </html>

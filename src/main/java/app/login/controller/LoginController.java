@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import app.app.form.NumericForm;
 import app.app.service.IndexLogicImpl;
+import app.app.service.TargetLogicImpl;
 
 
 @Controller
@@ -19,6 +20,9 @@ public class LoginController {
 	
 	@Autowired
 	IndexLogicImpl indexLogicImpl;
+	
+	@Autowired
+	TargetLogicImpl targetLogicImpl;
 	
 	// ログイン画面へ遷移
 	@GetMapping("/login")
@@ -46,6 +50,10 @@ public class LoginController {
 		model.addAttribute("numericForm",numericForm);
 		// ヘッダーに表示する用のユーザーネーム
 		model.addAttribute("username",name);
+		// 目標値を取得
+		int target = targetLogicImpl.selectTarget();
+		// 目標値をビューに渡す
+		model.addAttribute("target",target);
 		// 画面表示
 		return "app/index";
 	}

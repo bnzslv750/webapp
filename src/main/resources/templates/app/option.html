@@ -22,6 +22,7 @@
         }
     }
 </script>
+<script src="js/option.js"></script>
 </head>
 <body>
 <form class="selectMonth" th:action="@{/option}" method="post">
@@ -57,15 +58,18 @@
 	<tbody>
 		<tr th:each="num : ${NumericForm}">
 			<td th:text="${num.year} + '年' + ${num.month} + '月' + ${num.date} + '日'" ></td>
-			<td th:text="${num.breakfast}"></td>
-			<td th:text="${num.morning_insulin}"></td>
-			<td th:text="${num.morning_numeric}"></td>
-			<td th:text="${num.lunch}"></td>
-			<td th:text="${num.noon_insulin}"></td>
-			<td th:text="${num.noon_numeric}"></td>
-			<td th:text="${num.dinner}"></td>
-			<td th:text="${num.evening_insulin}"></td>
-			<td th:text="${num.evening_numeric}"></td>
+				<td th:id="'breakfast' + ${num.date}" th:text="${num.breakfast}"></td>
+				<td th:id="'morning_insulin' + ${num.date}" th:text="${num.morning_insulin}"></td>
+				<td th:id="'morning_numeric' + ${num.date}" th:text="${num.morning_numeric}"></td>
+			<input type="hidden" th:id="'hidmorning_numeric' + ${num.date}" th:value="${num.morning_numeric}">
+				<td th:id="'lunch' + ${num.date}" th:text="${num.lunch}"></td>
+				<td th:id="'noon_insulin' + ${num.date}" th:text="${num.noon_insulin}"></td>
+				<td th:id="'noon_numeric' + ${num.date}" th:text="${num.noon_numeric}"></td>
+			<input type="hidden" th:id="'hidnoon_numeric' + ${num.date}" th:value="${num.noon_numeric}">
+				<td th:id="'dinner' + ${num.date}" th:text="${num.dinner}"></td>
+				<td th:id="'evening_insulin' + ${num.date}" th:text="${num.evening_insulin}"></td>
+				<td th:id="'evening_numeric' + ${num.date}" th:text="${num.evening_numeric}"></td>
+			<input type="hidden" th:id="'hidevening_numeric' + ${num.date}" th:value="${num.evening_numeric}">
 		</tr>
 	</tbody>
 </table>
