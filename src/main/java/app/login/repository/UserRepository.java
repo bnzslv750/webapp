@@ -10,9 +10,5 @@ import app.login.entity.UserEntity;
 //@Repository
 public interface UserRepository extends JpaRepository<UserEntity, String> {
 	
-	// usernameでDBからデータを検索
-	/*@Query(value="select * from user_t as u where u.username = :username",nativeQuery = true)
-	UserEntity findByUsername(@Param("username") String username);*/
-	
 	UserEntity findByUsername(String username);
 }
